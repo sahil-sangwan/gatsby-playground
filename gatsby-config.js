@@ -29,7 +29,7 @@ module.exports = {
       resolve: `gatsby-source-wordpress`,
       options: {
         // the only required plugin option for WordPress is the GraphQL url.
-        url: `http://demo.local/graphql`,
+        url: process.env.WPGRAPHQL_URL || `http://demo.local/graphql`,
       },
       schema: {
         //Prefixes all WP Types with "Wp" so "Post and allPost" become "WpPost and allWpPost".
