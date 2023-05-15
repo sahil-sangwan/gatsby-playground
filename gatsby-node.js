@@ -14,18 +14,53 @@ const chunk = require(`lodash/chunk`)
 exports.createPages = async gatsbyUtilities => {
   // Query our posts from the GraphQL server
   const posts = await getPosts(gatsbyUtilities)
+  const pages = await getPages(gatsbyUtilities)
 
   // If there are no posts in WordPress, don't do anything
   if (!posts.length) {
     return
   }
 
+  await createIndividualPages({pages, gatsbyUtilities })
+
   // If there are posts, create pages for them
   await createIndividualBlogPostPages({ posts, gatsbyUtilities })
 
   // And a paginated archive
   await createBlogPostArchive({ posts, gatsbyUtilities })
+
 }
+
+// todo: error handling
+async function getPages( {graphql} ) {
+  // filter nodes by some attribute here. each function should be named after the attribute (eg getHomePage, getPortfolioPage, etc)
+  const graphqlResult = await graphql(`
+    query{
+      allWpPage {
+        nodes {
+          id
+          uri
+        }
+      }
+    }
+  `);
+  return graphqlResult.data.allWpPage.nodes;
+}
+
+const createIndividualPages = async ({ pages, gatsbyUtilities }) => 
+Promise.all(
+  pages.map((page) => {
+    const { id, uri } = page;
+
+    return gatsbyUtilities.actions.createPage({
+      path: uri,
+      component: require.resolve('./src/templates/wp-page-template.js'),
+      context: {
+        id: id
+      }
+    });
+  })
+)
 
 /**
  * This function creates all the individual blog pages in this site

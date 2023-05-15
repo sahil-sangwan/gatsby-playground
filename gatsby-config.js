@@ -5,6 +5,9 @@
  * https://www.gatsbyjs.com/docs/gatsby-config/
  *
  */
+require("dotenv").config({
+  path: `.env.${process.env.NODE_ENV}`,
+})
 
 module.exports = {
   /**
@@ -26,9 +29,11 @@ module.exports = {
       resolve: `gatsby-source-wordpress`,
       options: {
         // the only required plugin option for WordPress is the GraphQL url.
-        url:
-          process.env.WPGRAPHQL_URL ||
-          `https://wpgatsbydemo.wpengine.com/graphql`,
+        url: `http://demo.local/graphql`,
+      },
+      schema: {
+        //Prefixes all WP Types with "Wp" so "Post and allPost" become "WpPost and allWpPost".
+        typePrefix: `Wp`,
       },
     },
 
