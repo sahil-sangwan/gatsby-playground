@@ -12,7 +12,7 @@ const Layout = ({ isHomePage, children }) => {
       }
     }
   } = useStaticQuery(graphql`
-    {
+    query LayoutQuery {
       allWpMenu {
         nodes {
           menuItems {
