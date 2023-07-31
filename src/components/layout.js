@@ -2,6 +2,14 @@ import React from "react"
 import { Link, useStaticQuery, graphql } from "gatsby"
 import parse from "html-react-parser"
 
+export const NavbarContainer = styled(Container)`
+display: flex;
+justify-content: space-between;
+align-items: center;
+height: 80px;
+${Container};
+`;
+
 const Layout = ({ isHomePage, children }) => {
   const {
     allWpMenu: {
@@ -18,7 +26,7 @@ const Layout = ({ isHomePage, children }) => {
           menuItems {
             nodes {
               label
-              url
+              path
             }
           }
         }
@@ -31,16 +39,16 @@ const Layout = ({ isHomePage, children }) => {
       <header className="global-header">
         {isHomePage ? (
           <div className="main-heading">
-            {/* <Link to="/">{parse(title)}</Link> */}
+            <NavbarContainer>
             {nodes.map((item, index) => {
-              const { label, url } = item;
-
+              const { label, path } = item;
               return (
                 <li key={index}>
-                  <Link to={url}>{label}</Link>
+                  <Link to={path}>{label}</Link>
                 </li>
               );
             })}
+            </NavbarContainer>
           </div>
         ) : (
           <Link className="header-link-home" to="/">
